@@ -24,7 +24,7 @@
 # So donuts(5) returns 'Number of donuts: 5'
 # and donuts(23) returns 'Number of donuts: many'
 def donuts(count):
-    if count > 9:
+    if count >= 10:
         return "Number of donuts: many"
     else:
         return "Number of donuts: %s" % count
@@ -37,7 +37,7 @@ def donuts(count):
 # is less than 2, return instead the empty string.
 def both_ends(s):
     if len(s)<2:
-        return ""
+        return ''
     else:
         return s[:2] + s[-2:] 
         
@@ -63,6 +63,7 @@ def fix_start(s):
 #   'dog', 'dinner' -> 'dig donner'
 # Assume a and b are length 2 or more.
 def mix_up(a, b):
+    assert len(a) >= 2 and len(b) >= 2
     return b[:2] + a[2:] + ' ' + a[:2] + b[2:]
 
 

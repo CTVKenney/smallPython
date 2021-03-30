@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/env python3
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
@@ -46,23 +46,59 @@ import sys
 # Then print_words() and print_top() can just call the utility function.
 
 ###
+def word_count_dict(filename):
+    mydict = {}
+    f = open(filename, 'r')
+    for line in f:
+        lineList = line.split()
+        for word in lineList:
+            word = word.lower()
+            if word in mydict:
+                mydict[word] = mydict[word]+1
+            else:
+                mydict[word] = 1        
+    f.close()
+    return mydict
+
+
+
+def print_words(filename):
+    wordCountDict = word_count_dict(filename)
+    for key in sorted(wordCountDict.keys()):
+        print(key,wordCountDict[key]) 
+    return
+
+def myKey(someTuple):
+    return -someTuple[1]
+
+
+def print_top(filename, count):
+    wordCountDict = word_count_dict(filename)
+    longList = sorted(wordCountDict.items(), key = myKey)
+    for i in range(count):
+        print(longList[i][0], longList[i][1])
+    return
+
+
+
+
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
 def main():
-  if len(sys.argv) != 3:
-    print 'usage: ./wordcount.py {--count | --topcount} file'
-    sys.exit(1)
+    if len(sys.argv) != 3:
+        print('usage: ./wordcount.py {--count | --topcount} file')
+        sys.exit(1)
 
-  option = sys.argv[1]
-  filename = sys.argv[2]
-  if option == '--count':
-    print_words(filename)
-  elif option == '--topcount':
-    print_top(filename)
-  else:
-    print 'unknown option: ' + option
-    sys.exit(1)
+    option = sys.argv[1]
+    filename = sys.argv[2]
+    if option == '--count':
+        print_words(filename)
+    elif option == '--topcount':
+        print_top(filename, 100)
+    else:
+        print('unknown option: ' + option)
+        sys.exit(1)
 
 if __name__ == '__main__':
   main()

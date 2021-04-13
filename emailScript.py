@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+#Contributors: Anshu Chen, Charles Kenney
 import os.path
 from os import path, listdir #These allow us to use the 'exists' function on file names and make a list of files in current directory
 import csv

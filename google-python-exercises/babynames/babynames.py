@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 # Copyright 2010 Google Inc.
 # Licensed under the Apache License, Version 2.0
 # http://www.apache.org/licenses/LICENSE-2.0
@@ -35,34 +35,55 @@ Suggested milestones for incremental development:
 """
 
 def extract_names(filename):
-  """
-  Given a file name for baby.html, returns a list starting with the year string
-  followed by the name-rank strings in alphabetical order.
-  ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
-  """
-  # +++your code here+++
-  return
+    """
+    Given a file name for baby.html, returns a list starting with the year string
+    followed by the name-rank strings in alphabetical order.
+    ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
+    """
+    f = open(filename, 'r')
+    fileString = f.read()
+    year = re.search(r'Popularity in (\d\d\d\d)', fileString).group(1)
+    namePops = re.findall(r'<tr align=\"right\"><td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', fileString)
+    namePopDict = {}
+    for tup in namePops:
+        if tup[1] in namePopDict:
+            namePopDict[tup[1]] = min([namePopDict[tup[1]], tup[0]])
+        else:
+            namePopDict[tup[1]] = tup[0]
+        
+        if tup[2] in namePopDict:
+            namePopDict[tup[2]] = min([namePopDict[tup[2]], tup[0]])
+        else:
+            namePopDict[tup[2]] = tup[0]
+    yNRL = [year] #'year, name-rank list'
+    for key in namePopDict:
+        #yNRL = yNRL.append(key + ' ' + namePopDict[key])
+        print(key + ' ' + namePopDict[key])
+    yNRL = sorted(yNRL)
+    return yNRL
 
 
 def main():
-  # This command-line parsing code is provided.
-  # Make a list of command line arguments, omitting the [0] element
-  # which is the script itself.
-  args = sys.argv[1:]
+    # This command-line parsing code is provided.
+    # Make a list of command line arguments, omitting the [0] element
+    # which is the script itself.
+    args = sys.argv[1:]
 
-  if not args:
-    print 'usage: [--summaryfile] file [file ...]'
-    sys.exit(1)
+    if not args:
+        print('usage: [--summaryfile] file [file ...]')
+        sys.exit(1)
 
-  # Notice the summary flag and remove it from args if it is present.
-  summary = False
-  if args[0] == '--summaryfile':
-    summary = True
-    del args[0]
+    # Notice the summary flag and remove it from args if it is present.
+    summary = False
+    if args[0] == '--summaryfile':
+        summary = True
+        del args[0]
 
-  # +++your code here+++
-  # For each filename, get the names, then either print the text output
-  # or write it to a summary file
-  
+    # For each filename, get the names, then either print the text output
+    # or write it to a summary file
+    print(extract_names(args[0]))
+    return
+
+
 if __name__ == '__main__':
-  main()
+    main()

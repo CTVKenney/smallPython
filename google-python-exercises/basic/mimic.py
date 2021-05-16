@@ -77,14 +77,14 @@ def print_mimic(mimic_dict, word):
 
 # Provided main(), calls mimic_dict() and mimic()
 def main():
-  if len(sys.argv) != 3:
-    print('usage: ./mimic.py file-to-read starter-word')
-    sys.exit(1)
+    if len(sys.argv) != 3:
+        print('usage: ./mimic.py file-to-read starter-word')
+        sys.exit(1)
 
-  dict = mimic_dict(sys.argv[1])
-  word = sys.argv[2]
-  print_mimic(dict, word)
+    dict = mimic_dict(sys.argv[1])
+    word = sys.argv[2]
+    print_mimic(dict, word)
 
 
 if __name__ == '__main__':
-  main()
+    main()

@@ -11,7 +11,8 @@ import re
 import sys
 import urllib
 
-"""Logpuzzle exercise
+"""
+Logpuzzle exercise
 Given an apache logfile, find the puzzle urls and download the images.
 
 Here's what a puzzle url looks like:
@@ -27,7 +28,7 @@ def read_urls(filename):
   f = open(filename, 'rU')
   logtext = f.read()
   patternlist = re.findall(r'GET \S+puzzle\S+ ', logtext)
-  return
+  return patternlist
 
   
 
@@ -43,23 +44,23 @@ def download_images(img_urls, dest_dir):
   
 
 def main():
-  args = sys.argv[1:]
+    args = sys.argv[1:]
 
-  if not args:
-    print('usage: [--todir dir] logfile')
-    sys.exit(1)
+    if not args:
+        print('usage: [--todir dir] logfile')
+        sys.exit(1)
 
-  todir = ''
-  if args[0] == '--todir':
-    todir = args[1]
-    del args[0:2]
+    todir = ''
+    if args[0] == '--todir':
+        todir = args[1]
+        del args[0:2]
 
-  img_urls = read_urls(args[0])
+    img_urls = read_urls(args[0])
 
-  if todir:
-    download_images(img_urls, todir)
-  else:
-    print('\n'.join(img_urls))
+    if todir:
+        download_images(img_urls, todir)
+    else:
+        print('\n'.join(img_urls))
 
 if __name__ == '__main__':
-  main()
+    main()

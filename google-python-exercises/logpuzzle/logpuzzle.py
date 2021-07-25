@@ -25,9 +25,9 @@ def read_urls(filename):
   extracting the hostname from the filename itself.
   Screens out duplicate urls and returns the urls sorted into
   increasing order."""
-  f = open(filename, 'rU')
+  f = open(filename, 'r')
   logtext = f.read()
-  patternlist = re.findall(r'GET \S+puzzle\S+ ', logtext)
+  patternlist = re.findall(r'/edu\S+puzzle\S+', logtext)
   return patternlist
 
   

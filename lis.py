@@ -11,22 +11,25 @@ def lis(L):
     if len(L) == 0:
         return 0
     minIndex = L.index(min(L))
-    leftL = L[:minIndex]
     rightL = L[minIndex+1:]
-    return max(lis(leftL), lis(rightL)+1)
+    rightVal = lis(rightL)
+    withoutMin = L[:minIndex] + L[minIndex+1:]
+    return max(lis(withoutMin), rightVal+1)
 
 def lds(L):
     """
     Inputs a list L of DISTINCT comparable elements.
-    Outputs the length of the longest decreasing subsequence in L.
+    Outputs the length of the longest increasing subsequence in L.
     """
     if len(L) == 0:
         return 0
     maxIndex = L.index(max(L))
-    leftL = L[:maxIndex]
     rightL = L[maxIndex+1:]
-    return max(lds(leftL), lds(rightL)+1)
-    
+    rightVal = lds(rightL)
+    withoutMax = L[:maxIndex]+L[maxIndex+1:]
+    return max(lds(withoutMax), rightVal+1)
+
+
 def randperm(n):
     """
     Inputs a positive integer n
@@ -42,6 +45,7 @@ def randperm(n):
 
 def main(n):
     shuf = randperm(n)
+    print(shuf)
     return lis(shuf), lds(shuf)
 
 if __name__ == '__main__':

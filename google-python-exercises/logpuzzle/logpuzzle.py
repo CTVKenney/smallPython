@@ -10,6 +10,8 @@ import os
 import re
 import sys
 import urllib
+import shutil
+import requests
 
 """
 Logpuzzle exercise
@@ -27,8 +29,12 @@ def read_urls(filename):
   increasing order."""
   f = open(filename, 'r')
   logtext = f.read()
-  patternlist = re.findall(r'/edu\S+puzzle\S+', logtext)
-  return patternlist
+  patternlist = re.findall(r'\S+puzzle\S+', logtext)
+  patternlist = sorted(patternlist)
+  for i in range(len(patternlist)):
+    if patternlist[i] == patternlist[i+1]:
+      del patternlist[i]
+  return [filename + pattern for pattern in patternlist]
 
   
 
@@ -40,27 +46,69 @@ def download_images(img_urls, dest_dir):
   with an img tag to show each local image file.
   Creates the directory if necessary.
   """
+  if not os.path.isdir(dest_dir):
+    os.mkdir(dest_dir)
+  for i in range(len(img_urls)):
+    filename = 'img' + str(i)
+    streamer = requests.get(img_urls[i], stream = True)
+    if streamer.status_code == 200:
+      streamer.raw.decode_content = True
+      with open(filename, 'wb') as f:
+        shutil.copyfileobj(streamer.raw, f)
+    else:
+      print('Image %d could not be downloaded', i)
   # +++your code here+++
   
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 def main():
-    args = sys.argv[1:]
+  args = sys.argv[1:]
 
-    if not args:
-        print('usage: [--todir dir] logfile')
-        sys.exit(1)
+  if not args:
+    print('usage: [--todir dir] logfile')
+    sys.exit(1)
 
-    todir = ''
-    if args[0] == '--todir':
-        todir = args[1]
-        del args[0:2]
+  todir = ''
+  if args[0] == '--todir':
+    todir = args[1]
+    del args[0:2]
 
-    img_urls = read_urls(args[0])
+  img_urls = read_urls(args[0])
 
-    if todir:
-        download_images(img_urls, todir)
-    else:
-        print('\n'.join(img_urls))
+  if todir:
+    download_images(img_urls, todir)
+  else:
+    print('\n'.join(img_urls))
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
-    main()
+  main()
+
+
+
+
+

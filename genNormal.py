@@ -3,7 +3,7 @@
 import random
 import math
 
-numDraws = 10000 #A parameter that can be altered,
+numDraws = 100000 #A parameter that can be altered,
 #which determines how good the approximation to normal will be.
 
 def main():

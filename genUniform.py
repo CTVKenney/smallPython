@@ -10,14 +10,13 @@ from datetime import datetime
 random.seed(datetime.now())
 
 numBits = 15 #A parameter that can be altered,
-#which determines how good the approximation to normal will be.
+#which determines how good the approximation to uniform will be.
 
 def main():
     randList = [random.randrange(2) for i in range(numBits)]
     toBits = [randList[i]*(0.5 ** (i+1)) for i in range(numBits)]
     randUniform = sum(toBits)
-    print(randUniform)
-    return
+    return randUniform
 
 if __name__ == '__main__':
     main()

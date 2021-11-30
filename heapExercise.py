@@ -19,10 +19,27 @@ def hPeek(H):
     return H[0]
 
 #H is currently a max heap.
-#integer is an integer we want to add as a new element
-def hInsert(integer, H):
-    newList = H + [integer]
+#newEl is a new element we want to add
+def hInsert(newEl, H):
+    newList = H + [newEl] #Initially, newEl is added as a child of the first node with an available child spot.
+    newPos = len(H) # = len(newList) -1, the position of newEl
+    print(newList, newPos)
+    while (newPos > 0):
+        if newList[newPos] > newList[math.floor((newPos - 1)/2)]:
+            newList[newPos] = newList[math.floor((newPos - 1)/2)]
+            newList[math.floor((newPos - 1)/2)] = newEl
+            newPos = math.floor((newPos - 1)/2)
+        else:
+            newPos = 0
+    return newList
+
+def hPop(H):
+    alpha = H[0]
+    newList = H[:-1]
+    newList[0] = H[-1]
+    newPos = 0
     #TO BE CONTINUED
+    return alpha
 
 def main():
     return

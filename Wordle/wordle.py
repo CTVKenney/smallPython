@@ -3,6 +3,7 @@
 import re
 import os.path
 import sys
+from math import prod
 
 """
 The first time we run this program, we'll
@@ -34,58 +35,23 @@ Y in the location of a lowercase letter means that letter is in the word, but no
 and outputs a position (see newWordList below)
 """
 def gameToPos(game):
-    position = ['*****',{},'abcdefghijklmnopqrstuvwxyz']
-    for wordTup in game:
-        wordGuessed = wordTup[0]
-        guessResults = wordTup[1]
-        for i in range(5):
-            if guessResults[i] == '*': #The letter indexed by i is impossible
-                position[2] = position[2].replace(wordGuessed[i],'') #Remove that letter from our list of possible letters
-            elif guessResults[i] == 'Y': #The letter indexed by i is used in another spot, but not position i!
-                if wordGuessed[i] in position[1]:
-                    position[1][wordGuessed[i]][i] = 0 #The letter now can't be used in position i either
-                else:
-                    position[1][wordGuessed[i]] = [1 - (j == i) for j in range(5)] #Add the letter to the dict & forbid it at position i
-            elif guessResults[i] == 'G': #The letter indexed by i is correct already!
-                newListVersion = list(position[0])
-                newListVersion[i] = wordGuessed[i]
-                position[0] = ''.join(newListVersion)
-            else:
-                raise Exception('The second tuple in a game position should only include asterisks, Gs, and Ys')
 
 """
 wordPossible inputs a position (see newWordList below) and a word (5 letter string) and outputs
-True if the word might be possible in the position, False otherwise
-Impossible words may (very rarely) return True, but possible words will always return True.
+1 if the word might be possible in the position, 0 otherwise
 """
 def wordPossible(position,word):
-    knownSpots = position[0]
-    needLetters = position[1]
-    allowLetters = position[2]
-    firstMatchString = knownSpots.replace('*','['+allowLetters+']')
-    if re.match(firstMatchString, word):
-        hasNeededLetters = True
-        for letter in needLetters:
-            spots = needLetters[letter]
-            numLetterInGoodSpot = 0
-            for i in range(5):
-                if spots[i] == 1 and letter == word[i]:
-                    numLetterInGoodSpot = numLetterInGoodSpot + 1
-            if numLetterInGoodSpot == 0:
-                hasNeededLetters = False
-        return hasNeededLetters
-    else:
-        return False
-
+    return prod([position[i][word[i]] for i in range(len(word))]) #for standard Wordle, of course, len(word) will be 5
 
 """
 newWordList inputs a position (known information in the game) and an existing wordlist
 and winnows the dictionary based on the known information.
 
-A position is a list with: [knownSpots, needLetters, allowLetters].
-knownSpots is a string like '*a**y' (has known letters in their spots and stars elsewhere).
-needLetters is a dictionary { 't': [1,0,0,1,0], 'g': [1,1,1,0,1] } containing the possible spots for letters known to be in our word
-allowLetters is a string 'abcdfghijklnopqrstuvwxy' of letters that could be used in the remainder of the word.
+A position is a list of length 5:
+[dict0, dict1, dict2, dict3, dict4],
+where dictn is a dictionary:
+{'a': 1, 'b':0, 'c':1, ..., 'z':0},
+and dictn[let] is 1 if let could go in position n, 0 otherwise.
 """
 def newWordList(position, wordlist):
     return [word for word in wordList if wordPossible(position, word)]

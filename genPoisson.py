@@ -8,11 +8,6 @@ from datetime import datetime
 
 random.seed(datetime.now())
 
-if len(sys.argv) > 1:
-    commandLineLam = float(sys.argv[1])
-else:
-    commandLineLam=1
-
 #A biased coinflip: returns 1 with probability p, 0 with probability 1-p
 def flip(p):
     if random.random() < p:
@@ -22,7 +17,7 @@ def flip(p):
 
 #Outputs the value of the partial sum of the power series
 #for e^lam over the summand interval from start (inclusive) to stop-1 (inclusive)
-def eSeriesRange(lam, stop, start = 0):
+def eSeriesRange(lam, start, stop):
     return sum([lam**i / math.factorial(i) for i in range(start, stop)])
 
 #Inputs a list of positive numbers corresponding to wieghts on 0,1,...,len(list)-1;
@@ -46,15 +41,15 @@ def weightDie(weightList):
 
 #(2) A "Binary Search" with Coinflips over the Natural Numbers
 
-def main(lam = commandLineLam):
+def binSearchPoisson(lam):
     #First, we use a pseudo binary search to find an interval of length 2^n which contains our draw
     drawn = flip(math.exp(-lam))
     if drawn:
         return 0
-    upperN = 1
+    upperN = 1 #upperN is the exponent of 2 at the upper end of the next range of length power-of-2
     while not drawn:
-        prob = (math.exp(-lam) * eSeriesRange(lam, 2**upperN, 2**(upperN -1)))/(1 - math.exp(-lam) * (eSeriesRange(lam, 2**upperN))) #The probability,
-        #Conditional on X>2^(upperN-1)-1, that X<=2^upperN.
+        prob = eSeriesRange(lam, 2**(upperN-1), 2**upperN)/(math.exp(lam) - eSeriesRange(lam, 0, 2**(upperN-1))) #The probability,
+        #Conditional on X>2^(upperN-1)-1, that X < 2^upperN.
         drawn = flip(prob)
         upperN = upperN+1-drawn
     #It should now be the case that drawn=1 and upperN is a power such that our Poisson r.v. X lies between 2^(upperN-1) and 2^upperN -1, inclusive.
@@ -62,5 +57,8 @@ def main(lam = commandLineLam):
     finalDraw = 2**(upperN-1) + withinDyad
     return finalDraw
 
-if __name__ == '__main__':
-    main()
+rareTries = 100
+
+def rarEventPoisson(lam):
+    prob = lam/rareTries
+    return sum([flip(prob) for i in range(rareTries)])

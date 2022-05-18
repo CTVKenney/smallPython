@@ -57,7 +57,7 @@ def binSearchPoisson(lam):
     finalDraw = 2**(upperN-1) + withinDyad
     return finalDraw
 
-rareTries = 100
+rareTries = 1000
 
 def rarEventPoisson(lam):
     prob = lam/rareTries
